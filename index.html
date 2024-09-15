@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz : Union Européenne</title>
+    <style>
+        body {
+            font-family: 'Mayan', sans-serif;
+            margin: 0;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+            text-align: center;
+        }
+        .quiz-container, .summary {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            background-image: url('images/back.jpg.webp');
+            background-size: cover;
+            background-position: center;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #000;
+        }
+        .choices {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-left: 20%;
+        }
+        .choices li {
+            margin: 8px 0;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #FF0000;
+            color: white;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #CC0000;
+        }
+        .summary {
+            display: none;
+        }
+        .summary ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary li {
+            text-align: left;
+            margin-left: 20%;
+            margin-bottom: 10px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+        .score {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .quiz-container, .summary {
+                max-width: 90%;
+                margin: 20px auto;
+                padding: 15px;
+                border-radius: 10px;
+            }
+            button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .quiz-container, .summary {
+                padding: 10px;
+                margin: 10px;
+                border-radius: 10px;
+            }
+            .question {
+                font-size: 16px;
+            }
+            button {
+                font-size: 12px;
+                padding: 6px 12px;
+                border-radius: 10px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .quiz-container, .summary {
+                max-width: 800px;
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz-container">
+    <h2>QCM ENTRAINEMENT - Union Européenne</h2>
+    <div id="question-container">
+        <!-- Les questions seront affichées ici dynamiquement -->
+    </div>
+    <button id="next-button" onclick="nextQuestion()">Suivant</button>
+</div>
+
+<div class="summary" id="summary">
+    <h3>Récapitulatif</h3>
+    <ul id="summary-list">
+        <!-- Le récapitulatif des réponses sera affiché ici -->
+    </ul>
+    <div class="score" id="score"></div>
+    <button onclick="restartQuiz()">Recommencer</button>
+</div>
+
+<script>
+    const quizData = [
+        { question: "En quelle année le traité de Maastricht, donnant naissance à l’Union européenne, a-t-il été signé ?", choices: ["1986", "1992", "1995", "2000"], correct: 1 },
+        { question: "Parmi les organisations suivantes, laquelle n’a pas fait partie des fondations de l’UE ?", choices: ["CECE", "CEE", "OTAN", "EURATOM"], correct: 2 },
+        { question: "Combien d’Etats étaient membres fondateurs de la CEE en 1957 ?", choices: ["4", "6", "7", "9"], correct: 1 },
+        { question: "Quel événement majeur a principalement conduit à l’élargissement de l’UE en 2004?", choices: ["L’explosion de l’URSS et la fin du communisme", "La crise économique mondiale", "La guerre en Yougoslavie", "Le traité de Lisbonne"], correct: 0 },
+        { question: "Quels pays ont rejoint l’Union européenne lors du premier élargissement en 1973 ?", choices: ["Espagne, Portugal", "Grèce, Danemark", "Royaume-Uni, Irlande, Danemark", "Autriche, Suède, Finlande"], correct: 2 },
+        { question: "Quel pays a rejoint l’UE lors du septième élargissement en 2013 ?", choices: ["Roumanie", "Bulgarie", "Croatie", "Chypre"], correct: 2 },
+        { question: "Combien d’étapes principales sont nécessaires pour adhérer à l’Union européenne ?", choices: ["3", "4", "5", "6"], correct: 2 },
+        { question: "Quels critères un pays doit-il remplir pour adhérer à l’UE selon les critères de Copenhague ?", choices: ["Respecter l’Etat de droit et une économie de marché viable", "Posséder une armée et une monnaie nationale", "Avoir une population supérieure à 10 millions d’habitants", "Etre membre de l’OTAN"], correct: 0 },
+        { question: "Comment un traité d’adhésion entre en vigueur dans l’UE ?", choices: ["Par décision de la Commission européenne uniquement", "Par vote populaire dans les pays candidats", "Par ratification des parlements nationaux ou par référendum dans tous les Etats membres", "Par décision du Parlement européen uniquement"], correct: 2 },
+        { question: "Quels pays ont intégré l’UE lors de l’élargissement du 1er mai 2004 ?", choices: ["Pologne, République tchèque, Hongrie", "Roumanie, Bulgarie", "Chypre, Malte", "Slovénie, Slovaquie"], correct: 0 },
+        { question: "Quels sont les deux pays des Balkans les plus avancés dans les négociations pour intégrer l’UE ?", choices: ["Albanie, Kosovo", "Serbie, Monténégro", "Bosnie-Herzégovine, Macédoine du Nord", "Grèce, Bulgarie"], correct: 1 },
+        { question: "Quel est le principal obstacle pour l’intégration des pays des Balkans occidentaux dans l’UE ?", choices: ["Leur situation géographique", "La guerre en Ukraine", "Leur instabilité politique et économique", "Leur population vieillissante"], correct: 2 },
+        { question: "Quand la Turquie a-t-elle déposé pour la première fois sa candidature pour rejoindre l’UE ?", choices: ["1963", "1987", "1999", "2004"], correct: 1 },
+        { question: "Quels pays ont retiré leur demande d’adhésion à l’UE en raison d’un changement d’opinion publique ?", choices: ["Suisse, Norvège, Islande", "Maroc, Algérie, Tunisie", "Ukraine, Géorgie, Moldavie", "Russie, Biélorussie"], correct: 0 },
+        { question: "Quelles sont les deux principales conséquences des élargissements successifs pour l’UE ?", choices: ["Une meilleure intégration politique et économique", "Une perte de cohésion interne et des difficultés institutionnelles", "Une montée de l’inflation et une baisse du PIB", "Une diminution des tensions régionales et une stabilité accrue"], correct: 1 },
+        { question: "Quels pays ont déposé leur candidature à l’UE suite à l'invasion de l’Ukraine par la Russie ?", choices: ["Ukraine, Moldavie, Georgie", "Biélorussie, Lettonie, Lituanie", "Serbie, Monténégro, Macédoine du Nord", "Arménie, Azerbaijan, Kazakhstan"], correct: 0 },
+        { question: "Quelle est la situation politique actuelle de l’Ukraine selon l’indice de démocratie ?", choices: ["Démocratie pleine", "Démocratie imparfaite", "Régime hybride", "Régime autoritaire"], correct: 2 }
+    ];
+
+    let currentQuestionIndex = 0;
+    let selectedAnswers = [];
+
+    function loadQuestion() {
+        const container = document.getElementById('question-container');
+        container.innerHTML = '';
+
+        const questionData = quizData[currentQuestionIndex];
+        const questionElem = document.createElement('div');
+        questionElem.className = 'question';
+        questionElem.textContent = questionData.question;
+
+        const choicesElem = document.createElement('ul');
+        choicesElem.className = 'choices';
+
+        questionData.choices.forEach((choice, index) => {
+            const choiceElem = document.createElement('li');
+            const choiceInput = document.createElement('input');
+            choiceInput.type = 'radio';
+            choiceInput.name = 'choice';
+            choiceInput.value = index;
+            choiceInput.id = `choice${index}`;
+            
+            const choiceLabel = document.createElement('label');
+            choiceLabel.htmlFor = `choice${index}`;
+            choiceLabel.textContent = choice;
+
+            choiceElem.appendChild(choiceInput);
+            choiceElem.appendChild(choiceLabel);
+            choicesElem.appendChild(choiceElem);
+        });
+
+        container.appendChild(questionElem);
+        container.appendChild(choicesElem);
+    }
+
+    function nextQuestion() {
+        const selectedChoice = document.querySelector('input[name="choice"]:checked');
+        if (!selectedChoice) {
+            alert("Veuillez sélectionner une réponse !");
+            return;
+        }
+
+        selectedAnswers.push(parseInt(selectedChoice.value));
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < quizData.length) {
+            loadQuestion();
+        } else {
+            showSummary();
+        }
+    }
+
+    function showSummary() {
+        document.getElementById('quiz-container').style.display = 'none';
+        const summary = document.getElementById('summary');
+        summary.style.display = 'block';
+
+        const summaryList = document.getElementById('summary-list');
+        summaryList.innerHTML = '';
+
+        let correctAnswers = 0;
+
+        quizData.forEach((q, index) => {
+            const summaryItem = document.createElement('li');
+            summaryItem.innerHTML = `
+                <strong>${q.question}</strong><br>
+                <div style="text-align: left; margin-left: 20%;">
+                    Votre réponse: ${q.choices[selectedAnswers[index]]} - 
+                    ${selectedAnswers[index] === q.correct ? '<span class="correct">Correct</span>' : '<span class="incorrect">Incorrect</span>'}<br>
+                    Bonne réponse: ${q.choices[q.correct]}
+                </div>
+            `;
+            summaryList.appendChild(summaryItem);
+            if (selectedAnswers[index] === q.correct) {
+                correctAnswers++;
+            }
+        });
+
+        document.getElementById('score').textContent = `Score: ${correctAnswers} / ${quizData.length}`;
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        selectedAnswers = [];
+        document.getElementById('summary').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'block';
+        loadQuestion();
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
